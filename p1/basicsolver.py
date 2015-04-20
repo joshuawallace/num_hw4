@@ -17,7 +17,7 @@ def phidoubleprime(x):
     return 120*np.pi*x
 
 def f(x):
-    return -20. + a*phidoubleprime(x)*np.cos(phi(x)) - a*(phiprime(x))**2 *np.sin(x)
+    return -20. + a*phidoubleprime(x)*np.cos(phi(x)) - a*(phiprime(x))**2 *np.sin(phi(x))
 
 def true_solution(x):
     return 1 + 12*x - 10*x*x + a*np.sin(phi(x))
@@ -27,18 +27,22 @@ n_grid = 255 #Number of interior grid points
 h = 1./float(n_grid+1) #size of grid spacing
 u_0 = 1. #Left boundary condition
 u_1 = 3. #Right boundary condition
-epsilon = 1e-7
+epsilon = 1e-5
 
-iter_max = 10000 #Set a maximum number of iterations before quitting
+iter_max = 100000 #Set a maximum number of iterations before quitting
 
 
-A = np.zeros( (n_grid,n_grid) )
+"""A = np.zeros( (n_grid,n_grid) )
 for i in range(len(A)):
     for j in range(len(A[i])):
         if i == j:
             A[i][j] = -2.
         elif j == (i-1) or j == (i+1):
-            A[i][j] = 1.
+            A[i][j] = 1."""
+
+A_diagonal = -2.
+A_offdiagonal = 1.
+
 
 u = np.zeros(n_grid) #the solution vector
 
@@ -71,12 +75,12 @@ for k in range(iter_max):
     for i in range(len(u)):
 
         if i==0:  #If we're on the first row, only add A[i][i+1]
-            summation = A[i][i+1] * u[i+1]
+            summation = A_offdiagonal * u[i+1]
         elif i== (len(u)-1): #If we're on the last row, only add A[i][i-1]
-            summation = A[i][i-1] * u[i-1]
+            summation = A_offdiagonal * u[i-1]
         else:  #Only need to add two elements together
-            summation = A[i][i+1] * u[i+1] + A[i][i-1] * u[i-1]
-        u[i] = 1./A[i][i] * (b[i] - summation) #Update u based on Jacobi algorithm
+            summation = A_offdiagonal * u[i+1] + A_offdiagonal * u[i-1]
+        u[i] = 1./A_diagonal * (b[i] - summation) #Update u based on Jacobi algorithm
 
     #check for convergence
     numconverge = 0 #count the number of elements of x which have converged
@@ -89,19 +93,14 @@ for k in range(iter_max):
         break
 
     if k==(20-1) or k==(100-1) or k==(1000-1):
-        if k == 19:
-            ctype = 'red'
-        if k == 99:
-            ctype = 'green'
-        if k == 999:
-            ctype = 'black'
         s = str(k+1) + " iterations"
-        pp.scatter(x_binedges,u,label=s,c=ctype)
+        pp.plot(x_binedges,u,label=s)
 
 
 else: #If for loop completes with convergence not being acheived
     print "Convergence not achieved after %d number of iterations" % (k+1)
 
+pp.plot(x_binedges,u,label='final iteration')
 pp.xlabel("x")
 pp.ylabel("u(x)")
 pp.legend(loc='best')
