@@ -28,8 +28,7 @@ h = 1./float(n_grid+1) #size of grid spacing
 u_0 = 1. #Left boundary condition
 u_1 = 3. #Right boundary condition
 epsilon = 1e-3  #The error tolerance I want to be within the true value before saying I've converged
-
-iter_max = 50000 #Set a maximum number of iterations before quitting
+number_of_iterations_per_level = 20 #Number of iterations per multigrid level
 
 
 #In what follows, we are trying to solve the matrix equation A u = b
@@ -66,35 +65,124 @@ x_toplot = np.linspace(0,1,200)
 pp.plot(x_toplot,true_solution(x_toplot),label="True Solution",lw=4)
 
 #Begin the iteration
-for k in range(iter_max):
-    for i in range(len(u)):
+for k255 in range(number_of_iterations_per_level):
 
-        if i==0:  #If we're on the first row, only add A[i][i+1]
-            summation = A_offdiagonal * u[i+1]
-        elif i== (len(u)-1): #If we're on the last row, only add A[i][i-1]
-            summation = A_offdiagonal * u[i-1]
-        else:  #Only need to add two elements together
-            summation = A_offdiagonal * u[i+1] + A_offdiagonal * u[i-1]
-        u[i] = 1./A_diagonal * (b[i] - summation) #Update u based on Jacobi algorithm
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * u[i+1]
+    elif i== (len(u)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * u[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * u[i+1] + A_offdiagonal * u[i-1]
+    u[i] = 1./A_diagonal * (b[i] - summation) #Update u based on Jacobi algorithm
 
-    #check for convergence
-    numconverge = 0 #count the number of elements of u which have converged
-    for i in range(len(u)):
-        if abs(u[i] - true_sol[i]) < epsilon: #If converged within epsilon
-                numconverge += 1
-
-    if numconverge == len(u):  #If all the elements of x have converged
-        print "Converged!  After %d loops" % (k+1)
-        break
-
-    #Plot the 20th, 100th, and 1000th iteration
+    """#Plot the 20th, 100th, and 1000th iteration
     if k==(20-1) or k==(100-1) or k==(1000-1):
         s = str(k+1) + " iterations"
-        pp.plot(x_binedges,u,label=s,lw=2.5)
+        pp.plot(x_binedges,u,label=s,lw=2.5)"""
+#Calculate the residual
+A = np.zeros( (n_grid,n_grid) )
+for i in range(len(A)):
+    for j in range(len(A[i])):
+        if i == j:
+            A[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A[i][j] = A_offdiagonal
+tau255 = np.add(b, -1.*np.dot(A,u) )
+
+#############################################
+#Now to iterate on the residual in the multigrid fashion
+#First restrict to 2 times smaller than original grid
+tau127 = np.zeroes( (n_grid+1)/2)  #The coarser tau
+for i in range(len(tau127)):
+    tau127[i] = tau255[i*2]  #Copy values at corresponding cell edges to coarsen
+
+#b127 = np.zeroes( (ngrid+1)/2)
+#for i in range(len(b127)):
+#    b127[i] = b[i*2]
 
 
-else: #If for loop completes with convergence not being acheived
-    print "Convergence not achieved after %d number of iterations" % (k+1)
+error127 = np.zeroes( (n_grid+1)/2) #the error vector, set initally to zero
+
+for k127 in range(number_of_iterations_per_level): #Solve A * error127 = -tau127
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error127[i+1]
+    elif i== (len(error127)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error127[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error127[i+1] + A_offdiagonal * error127[i-1]
+    error127[i] = 1./A_diagonal * (tau127[i] - summation) #Update error127 based on Jacobi algorithm
+    
+A127 = np.zeros( ((n_grid+1)/2,(n_grid+1)/2) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A127)):
+    for j in range(len(A127[i])):
+        if i == j:
+            A127[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A127[i][j] = A_offdiagonal
+
+tau127_prime = np.add(tau127, -1.*np.dot(A127,error127)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+#############################################
+#Now restrict to 4 times smaller than original grid
+tau63 = np.zeroes( (n_grid+1)/4)  #The coarser tau
+for i in range(len(tau63)):
+    tau63[i] = tau127_prime[i*2]  #Copy values at corresponding cell edges to coarsen
+
+error63 = np.zeroes( (n_grid+1)/4) #the error vector, set initally to zero
+
+for k63 in range(number_of_iterations_per_level): #Solve A * error63 = -tau63
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error63[i+1]
+    elif i== (len(error63)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error63[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error63[i+1] + A_offdiagonal * error63[i-1]
+    error63[i] = 1./A_diagonal * (tau63[i] - summation) #Update error63 based on Jacobi algorithm
+  
+A63 = np.zeros( ((n_grid+1)/4,(n_grid+1)/4) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A63)):
+    for j in range(len(A63[i])):
+        if i == j:
+            A63[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A63[i][j] = A_offdiagonal
+
+tau63_prime = np.add(tau63, -1.*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+#############################################
+#Now restrict to 8 times smaller than original grid
+tau63 = np.zeroes( (n_grid+1)/4)  #The coarser tau
+for i in range(len(tau63)):
+    tau63[i] = tau127_prime[i*2]  #Copy values at corresponding cell edges to coarsen
+
+error63 = np.zeroes( (n_grid+1)/4) #the error vector, set initally to zero
+
+for k63 in range(number_of_iterations_per_level): #Solve A * error63 = -tau63
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error63[i+1]
+    elif i== (len(error63)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error63[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error63[i+1] + A_offdiagonal * error63[i-1]
+    error63[i] = 1./A_diagonal * (tau63[i] - summation) #Update error63 based on Jacobi algorithm
+    
+A63 = np.zeros( ((n_grid+1)/4,(n_grid+1)/4) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A63)):
+    for j in range(len(A63[i])):
+        if i == j:
+            A63[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A63[i][j] = A_offdiagonal
+
+tau63_prime = np.add(tau63, -1.*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+
 
 #Plot the final solution and save te figure
 pp.plot(x_binedges,u,label='final iteration', lw=2.5)
@@ -102,4 +190,4 @@ pp.xlabel("x")
 pp.ylabel("u(x)")
 pp.legend(loc='best')
 pp.xlim(0,1)
-pp.savefig('problem1a.pdf')
+pp.savefig('problem1b.pdf')
