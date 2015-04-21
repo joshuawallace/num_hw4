@@ -155,11 +155,11 @@ tau63_prime = np.add(tau63, -1.*np.dot(A63,error63)) #Calculate a tau prime to c
 
 #############################################
 #Now restrict to 8 times smaller than original grid
-tau63 = np.zeroes( (n_grid+1)/4)  #The coarser tau
+tau63 = np.zeroes( (n_grid+1)/8)  #The coarser tau
 for i in range(len(tau63)):
     tau63[i] = tau127_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error63 = np.zeroes( (n_grid+1)/4) #the error vector, set initally to zero
+error63 = np.zeroes( (n_grid+1)/8) #the error vector, set initally to zero
 
 for k63 in range(number_of_iterations_per_level): #Solve A * error63 = -tau63
 
@@ -171,7 +171,7 @@ for k63 in range(number_of_iterations_per_level): #Solve A * error63 = -tau63
         summation = A_offdiagonal * error63[i+1] + A_offdiagonal * error63[i-1]
     error63[i] = 1./A_diagonal * (tau63[i] - summation) #Update error63 based on Jacobi algorithm
     
-A63 = np.zeros( ((n_grid+1)/4,(n_grid+1)/4) ) #Make a matrix A for the tau prime calculation
+A63 = np.zeros( ((n_grid+1)/8,(n_grid+1)/8) ) #Make a matrix A for the tau prime calculation
 for i in range(len(A63)):
     for j in range(len(A63[i])):
         if i == j:
@@ -180,6 +180,124 @@ for i in range(len(A63)):
             A63[i][j] = A_offdiagonal
 
 tau63_prime = np.add(tau63, -1.*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+#############################################
+#Now restrict to 16 times smaller than original grid
+tau31 = np.zeroes( (n_grid+1)/16)  #The coarser tau
+for i in range(len(tau31)):
+    tau31[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
+
+error31 = np.zeroes( (n_grid+1)/16) #the error vector, set initally to zero
+
+for k31 in range(number_of_iterations_per_level): #Solve A * error31 = -tau31
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error31[i+1]
+    elif i== (len(error31)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error31[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error31[i+1] + A_offdiagonal * error31[i-1]
+    error31[i] = 1./A_diagonal * (tau31[i] - summation) #Update error31 based on Jacobi algorithm
+    
+A31 = np.zeros( ((n_grid+1)/16,(n_grid+1)/16) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A31)):
+    for j in range(len(A31[i])):
+        if i == j:
+            A31[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A31[i][j] = A_offdiagonal
+
+tau31_prime = np.add(tau31, -1.*np.dot(A31,error31)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+#############################################
+#Now restrict to 32 times smaller than original grid
+tau15 = np.zeroes( (n_grid+1)/32)  #The coarser tau
+for i in range(len(tau15)):
+    tau15[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
+
+error15 = np.zeroes( (n_grid+1)/32) #the error vector, set initally to zero
+
+for k15 in range(number_of_iterations_per_level): #Solve A * error15 = -tau15
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error15[i+1]
+    elif i== (len(error15)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error15[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error15[i+1] + A_offdiagonal * error15[i-1]
+    error15[i] = 1./A_diagonal * (tau15[i] - summation) #Update error15 based on Jacobi algorithm
+    
+A15 = np.zeros( ((n_grid+1)/32,(n_grid+1)/32) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A15)):
+    for j in range(len(A15[i])):
+        if i == j:
+            A15[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A15[i][j] = A_offdiagonal
+
+tau15_prime = np.add(tau15, -1.*np.dot(A15,error15)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+
+
+#############################################
+#Now restrict to 64 times smaller than original grid
+tau7 = np.zeroes( (n_grid+1)/64)  #The coarser tau
+for i in range(len(tau7)):
+    tau7[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
+
+error7 = np.zeroes( (n_grid+1)/64) #the error vector, set initally to zero
+
+for k7 in range(number_of_iterations_per_level): #Solve A * error7 = -tau7
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error7[i+1]
+    elif i== (len(error7)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error7[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error7[i+1] + A_offdiagonal * error7[i-1]
+    error7[i] = 1./A_diagonal * (tau7[i] - summation) #Update error7 based on Jacobi algorithm
+    
+A7 = np.zeros( ((n_grid+1)/64,(n_grid+1)/64) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A7)):
+    for j in range(len(A7[i])):
+        if i == j:
+            A7[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A7[i][j] = A_offdiagonal
+
+tau7_prime = np.add(tau7, -1.*np.dot(A7,error7)) #Calculate a tau prime to communicate to 
+                                                           #Next restriction
+
+#############################################
+#Now restrict to 128 times smaller than original grid
+tau3 = np.zeroes( (n_grid+1)/128)  #The coarser tau
+for i in range(len(tau3)):
+    tau3[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
+
+error3 = np.zeroes( (n_grid+1)/128) #the error vector, set initally to zero
+
+for k3 in range(number_of_iterations_per_level): #Solve A * error3 = -tau3
+
+    if i==0:  #If we're on the first row, only add A[i][i+1]
+        summation = A_offdiagonal * error3[i+1]
+    elif i== (len(error3)-1): #If we're on the last row, only add A[i][i-1]
+        summation = A_offdiagonal * error3[i-1]
+    else:  #Only need to add two elements together
+        summation = A_offdiagonal * error3[i+1] + A_offdiagonal * error3[i-1]
+    error3[i] = 1./A_diagonal * (tau3[i] - summation) #Update error3 based on Jacobi algorithm
+    
+A3 = np.zeros( ((n_grid+1)/128,(n_grid+1)/128) ) #Make a matrix A for the tau prime calculation
+for i in range(len(A3)):
+    for j in range(len(A3[i])):
+        if i == j:
+            A3[i][j] = A_diagonal
+        elif j == (i-1) or j == (i+1):
+            A3[i][j] = A_offdiagonal
+
+tau3_prime = np.add(tau3, -1.*np.dot(A3,error3)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 
