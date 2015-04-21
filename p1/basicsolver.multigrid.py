@@ -92,16 +92,16 @@ tau255 = np.add(b, -1.*np.dot(A,u) )
 #############################################
 #Now to iterate on the residual in the multigrid fashion
 #First restrict to 2 times smaller than original grid
-tau127 = np.zeroes( (n_grid+1)/2)  #The coarser tau
+tau127 = np.zeros( (n_grid+1)/2)  #The coarser tau
 for i in range(len(tau127)):
     tau127[i] = tau255[i*2]  #Copy values at corresponding cell edges to coarsen
 
-#b127 = np.zeroes( (ngrid+1)/2)
+#b127 = np.zeros( (ngrid+1)/2)
 #for i in range(len(b127)):
 #    b127[i] = b[i*2]
 
 
-error127 = np.zeroes( (n_grid+1)/2) #the error vector, set initally to zero
+error127 = np.zeros( (n_grid+1)/2) #the error vector, set initally to zero
 
 for k127 in range(number_of_iterations_per_level): #Solve A * error127 = -tau127
 
@@ -126,11 +126,11 @@ tau127_prime = np.add(tau127, -1.*np.dot(A127,error127)) #Calculate a tau prime 
 
 #############################################
 #Now restrict to 4 times smaller than original grid
-tau63 = np.zeroes( (n_grid+1)/4)  #The coarser tau
+tau63 = np.zeros( (n_grid+1)/4)  #The coarser tau
 for i in range(len(tau63)):
     tau63[i] = tau127_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error63 = np.zeroes( (n_grid+1)/4) #the error vector, set initally to zero
+error63 = np.zeros( (n_grid+1)/4) #the error vector, set initally to zero
 
 for k63 in range(number_of_iterations_per_level): #Solve A * error63 = -tau63
 
@@ -155,11 +155,11 @@ tau63_prime = np.add(tau63, -1.*np.dot(A63,error63)) #Calculate a tau prime to c
 
 #############################################
 #Now restrict to 8 times smaller than original grid
-tau63 = np.zeroes( (n_grid+1)/8)  #The coarser tau
+tau63 = np.zeros( (n_grid+1)/8)  #The coarser tau
 for i in range(len(tau63)):
     tau63[i] = tau127_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error63 = np.zeroes( (n_grid+1)/8) #the error vector, set initally to zero
+error63 = np.zeros( (n_grid+1)/8) #the error vector, set initally to zero
 
 for k63 in range(number_of_iterations_per_level): #Solve A * error63 = -tau63
 
@@ -184,11 +184,11 @@ tau63_prime = np.add(tau63, -1.*np.dot(A63,error63)) #Calculate a tau prime to c
 
 #############################################
 #Now restrict to 16 times smaller than original grid
-tau31 = np.zeroes( (n_grid+1)/16)  #The coarser tau
+tau31 = np.zeros( (n_grid+1)/16)  #The coarser tau
 for i in range(len(tau31)):
     tau31[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error31 = np.zeroes( (n_grid+1)/16) #the error vector, set initally to zero
+error31 = np.zeros( (n_grid+1)/16) #the error vector, set initally to zero
 
 for k31 in range(number_of_iterations_per_level): #Solve A * error31 = -tau31
 
@@ -213,11 +213,11 @@ tau31_prime = np.add(tau31, -1.*np.dot(A31,error31)) #Calculate a tau prime to c
 
 #############################################
 #Now restrict to 32 times smaller than original grid
-tau15 = np.zeroes( (n_grid+1)/32)  #The coarser tau
+tau15 = np.zeros( (n_grid+1)/32)  #The coarser tau
 for i in range(len(tau15)):
     tau15[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error15 = np.zeroes( (n_grid+1)/32) #the error vector, set initally to zero
+error15 = np.zeros( (n_grid+1)/32) #the error vector, set initally to zero
 
 for k15 in range(number_of_iterations_per_level): #Solve A * error15 = -tau15
 
@@ -244,11 +244,11 @@ tau15_prime = np.add(tau15, -1.*np.dot(A15,error15)) #Calculate a tau prime to c
 
 #############################################
 #Now restrict to 64 times smaller than original grid
-tau7 = np.zeroes( (n_grid+1)/64)  #The coarser tau
+tau7 = np.zeros( (n_grid+1)/64)  #The coarser tau
 for i in range(len(tau7)):
     tau7[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error7 = np.zeroes( (n_grid+1)/64) #the error vector, set initally to zero
+error7 = np.zeros( (n_grid+1)/64) #the error vector, set initally to zero
 
 for k7 in range(number_of_iterations_per_level): #Solve A * error7 = -tau7
 
@@ -273,11 +273,11 @@ tau7_prime = np.add(tau7, -1.*np.dot(A7,error7)) #Calculate a tau prime to commu
 
 #############################################
 #Now restrict to 128 times smaller than original grid
-tau3 = np.zeroes( (n_grid+1)/128)  #The coarser tau
+tau3 = np.zeros( (n_grid+1)/128)  #The coarser tau
 for i in range(len(tau3)):
     tau3[i] = tau63_prime[i*2]  #Copy values at corresponding cell edges to coarsen
 
-error3 = np.zeroes( (n_grid+1)/128) #the error vector, set initally to zero
+error3 = np.zeros( (n_grid+1)/128) #the error vector, set initally to zero
 
 for k3 in range(number_of_iterations_per_level): #Solve A * error3 = -tau3
 
@@ -302,10 +302,10 @@ tau3_prime = np.add(tau3, -1.*np.dot(A3,error3)) #Calculate a tau prime to commu
 
 
 
-#Plot the final solution and save te figure
+"""#Plot the final solution and save te figure
 pp.plot(x_binedges,u,label='final iteration', lw=2.5)
 pp.xlabel("x")
 pp.ylabel("u(x)")
 pp.legend(loc='best')
 pp.xlim(0,1)
-pp.savefig('problem1b.pdf')
+pp.savefig('problem1b.pdf')"""
