@@ -61,7 +61,7 @@ pp.plot(x_toplot,true_solution(x_toplot),label="True Solution",lw=4)
 
 #Begin the iteration
 for k255 in range(number_of_iterations_per_level):
-
+  for i in range(len(u)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * u[i+1]
     elif i== (len(u)-1): #If we're on the last row, only add A[i][i-1]
@@ -97,7 +97,7 @@ for i in range(len(tau127)):
 error127 = np.zeros( (n_grid+1)/2 -1) #the error vector, set initally to zero
 
 for k127 in range(number_of_iterations_per_level): #Solve A * error127 = tau127
-
+  for i in range(len(error127)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error127[i+1]
     elif i== (len(error127)-1): #If we're on the last row, only add A[i][i-1]
@@ -114,7 +114,7 @@ for i in range(len(A127)):
         elif j == (i-1) or j == (i+1):
             A127[i][j] = A_offdiagonal
 
-tau127_prime = np.add(tau127, -1./h**2*np.dot(A127,error127)) #Calculate a tau prime to communicate to 
+tau127_prime = np.add(tau127, -1./2.**2*np.dot(A127,error127)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -126,7 +126,7 @@ for i in range(len(tau63)):
 error63 = np.zeros( (n_grid+1)/4 -1) #the error vector, set initally to zero
 
 for k63 in range(number_of_iterations_per_level): #Solve A * error63 = tau63
-
+  for i in range(len(error63)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error63[i+1]
     elif i== (len(error63)-1): #If we're on the last row, only add A[i][i-1]
@@ -143,7 +143,7 @@ for i in range(len(A63)):
         elif j == (i-1) or j == (i+1):
             A63[i][j] = A_offdiagonal
 
-tau63_prime = np.add(tau63, -1./h**4*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
+tau63_prime = np.add(tau63, -1./2.**4*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -155,7 +155,7 @@ for i in range(len(tau31)):
 error31 = np.zeros( (n_grid+1)/8 -1) #the error vector, set initally to zero
 
 for k31 in range(number_of_iterations_per_level): #Solve A * error31 = tau31
-
+  for i in range(len(error31)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error31[i+1]
     elif i== (len(error31)-1): #If we're on the last row, only add A[i][i-1]
@@ -172,7 +172,7 @@ for i in range(len(A31)):
         elif j == (i-1) or j == (i+1):
             A31[i][j] = A_offdiagonal
 
-tau31_prime = np.add(tau31, -1./h**8*np.dot(A31,error31)) #Calculate a tau prime to communicate to 
+tau31_prime = np.add(tau31, -1./2.**8*np.dot(A31,error31)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -184,7 +184,7 @@ for i in range(len(tau15)):
 error15 = np.zeros( (n_grid+1)/16 -1) #the error vector, set initally to zero
 
 for k15 in range(number_of_iterations_per_level): #Solve A * error15 = tau15
-
+  for i in range(len(error15)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error15[i+1]
     elif i== (len(error15)-1): #If we're on the last row, only add A[i][i-1]
@@ -201,7 +201,7 @@ for i in range(len(A15)):
         elif j == (i-1) or j == (i+1):
             A15[i][j] = A_offdiagonal
 
-tau15_prime = np.add(tau15, -1./h**16*np.dot(A15,error15)) #Calculate a tau prime to communicate to 
+tau15_prime = np.add(tau15, -1./2.**16*np.dot(A15,error15)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -213,7 +213,7 @@ for i in range(len(tau7)):
 error7 = np.zeros( (n_grid+1)/32 -1) #the error vector, set initally to zero
 
 for k7 in range(number_of_iterations_per_level): #Solve A * error7 = tau7
-
+  for i in range(len(error7)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error7[i+1]
     elif i== (len(error7)-1): #If we're on the last row, only add A[i][i-1]
@@ -230,7 +230,7 @@ for i in range(len(A7)):
         elif j == (i-1) or j == (i+1):
             A7[i][j] = A_offdiagonal
 
-tau7_prime = np.add(tau7, -1./h**32*np.dot(A7,error7)) #Calculate a tau prime to communicate to 
+tau7_prime = np.add(tau7, -1./2.**32*np.dot(A7,error7)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 
@@ -244,7 +244,7 @@ for i in range(len(tau3)):
 error3 = np.zeros( (n_grid+1)/64 -1) #the error vector, set initally to zero
 
 for k3 in range(number_of_iterations_per_level): #Solve A * error3 = tau3
-
+  for i in range(len(error3)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error3[i+1]
     elif i== (len(error3)-1): #If we're on the last row, only add A[i][i-1]
@@ -261,7 +261,7 @@ for i in range(len(A3)):
         elif j == (i-1) or j == (i+1):
             A3[i][j] = A_offdiagonal
 
-tau3_prime = np.add(tau3, -1./h**64*np.dot(A3,error3)) #Calculate a tau prime to communicate to 
+tau3_prime = np.add(tau3, -1./2.**64*np.dot(A3,error3)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 
@@ -291,7 +291,7 @@ for i in range(len(error3_prolongated)):  #Do simple interpolation to prolongate
 error7 = np.add(error7 , error3_prolongated)  #Update error7 based on error3_prolongated vector
  
 for k7 in range(number_of_iterations_per_level): #Solve A * error7 = tau7
-
+  for i in range(len(error7)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error7[i+1]
     elif i== (len(error7)-1): #If we're on the last row, only add A[i][i-1]
@@ -318,7 +318,7 @@ for i in range(len(error7_prolongated)):  #Do simple interpolation to prolongate
 error15 = np.add(error15 , error7_prolongated)  #Update error15 based on error7_prolongated vector
  
 for k15 in range(number_of_iterations_per_level): #Solve A * error15 = tau15
-
+  for i in range(len(error15)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error15[i+1]
     elif i== (len(error15)-1): #If we're on the last row, only add A[i][i-1]
@@ -345,7 +345,7 @@ for i in range(len(error15_prolongated)):  #Do simple interpolation to prolongat
 error31 = np.add(error31 , error15_prolongated)  #Update error31 based on error15_prolongated vector
  
 for k31 in range(number_of_iterations_per_level): #Solve A * error31 = tau31
-
+  for i in range(len(error31)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error31[i+1]
     elif i== (len(error31)-1): #If we're on the last row, only add A[i][i-1]
@@ -372,7 +372,7 @@ for i in range(len(error31_prolongated)):  #Do simple interpolation to prolongat
 error63 = np.add(error63 , error31_prolongated)  #Update error63 based on error31_prolongated vector
  
 for k63 in range(number_of_iterations_per_level): #Solve A * error63 = tau63
-
+  for i in range(len(error63)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error63[i+1]
     elif i== (len(error63)-1): #If we're on the last row, only add A[i][i-1]
@@ -399,7 +399,7 @@ for i in range(len(error63_prolongated)):  #Do simple interpolation to prolongat
 error127 = np.add(error127 , error63_prolongated)  #Update error127 based on error63_prolongated vector
  
 for k127 in range(number_of_iterations_per_level): #Solve A * error127 = tau127
-
+  for i in range(len(error127)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * error127[i+1]
     elif i== (len(error127)-1): #If we're on the last row, only add A[i][i-1]
@@ -443,7 +443,7 @@ for k255 in range(number_of_iterations_per_level): #Solve A * error255 = tau255
 u = np.add(u, error127_prolongated)  #Update u based on error255_prolongated vector
  
 for k in range(number_of_iterations_per_level): #Solve A * u = b
-
+  for i in range(len(u)):
     if i==0:  #If we're on the first row, only add A[i][i+1]
         summation = A_offdiagonal * u[i+1]
     elif i== (len(u)-1): #If we're on the last row, only add A[i][i-1]
