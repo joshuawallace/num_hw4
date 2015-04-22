@@ -113,7 +113,7 @@ for i in range(len(A127)):
         elif j == (i-1) or j == (i+1):
             A127[i][j] = A_offdiagonal
 
-tau127_prime = np.add(tau127, -1./(1*2)**2*np.dot(A127,error127)) #Calculate a tau prime to communicate to 
+tau127_prime = np.add(tau127, -(h*2.)**2/2.*np.dot(A127,error127)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -142,7 +142,7 @@ for i in range(len(A63)):
         elif j == (i-1) or j == (i+1):
             A63[i][j] = A_offdiagonal
 
-tau63_prime = np.add(tau63, -1./(2*2)**2*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
+tau63_prime = np.add(tau63, -(h*4.)**2/2.*np.dot(A63,error63)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -171,7 +171,7 @@ for i in range(len(A31)):
         elif j == (i-1) or j == (i+1):
             A31[i][j] = A_offdiagonal
 
-tau31_prime = np.add(tau31, -1./(4*2)**2*np.dot(A31,error31)) #Calculate a tau prime to communicate to 
+tau31_prime = np.add(tau31, -(h*8.)**2/2.*np.dot(A31,error31)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -200,7 +200,7 @@ for i in range(len(A15)):
         elif j == (i-1) or j == (i+1):
             A15[i][j] = A_offdiagonal
 
-tau15_prime = np.add(tau15, -1./(8*2)**2*np.dot(A15,error15)) #Calculate a tau prime to communicate to 
+tau15_prime = np.add(tau15, -(h*16.)**2/2.*np.dot(A15,error15)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 #############################################
@@ -260,7 +260,7 @@ for i in range(len(A3)):
         elif j == (i-1) or j == (i+1):
             A3[i][j] = A_offdiagonal
 
-tau3_prime = np.add(tau3, -1./(32*2)**2*np.dot(A3,error3)) #Calculate a tau prime to communicate to 
+tau3_prime = np.add(tau3, -(h*32.)**2/2.*np.dot(A3,error3)) #Calculate a tau prime to communicate to 
                                                            #Next restriction
 
 
