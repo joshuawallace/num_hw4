@@ -1,5 +1,5 @@
 
-HW assignemtn 4 for "Numerical Algorithms for Scientific Computing" course
+HW assignment 4 for "Numerical Algorithms for Scientific Computing" course
 ===
 
 Homework assignment 4 for Princeton University's APC 523 course, "Numerical Algorithms for Scientific Computing."
